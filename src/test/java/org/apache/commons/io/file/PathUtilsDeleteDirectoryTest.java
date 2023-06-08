@@ -18,9 +18,11 @@
 package org.apache.commons.io.file;
 
 import static org.apache.commons.io.file.CounterAssertions.assertCounts;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
@@ -93,4 +95,14 @@ public class PathUtilsDeleteDirectoryTest extends AbstractTempDirTest {
         // This will throw if not empty.
         Files.deleteIfExists(tempDirPath);
     }
+
+  /**
+   * Non existing directory, https://issues.apache.org/jira/browse/IO-800.
+   */
+  @Test
+  public void deleteNonExistingDirectory() {
+      assertThrows(IOException.class, () ->
+          PathUtils.deleteDirectory(tempDirPath.resolve("nonexistent"))
+      );
+  }
 }
